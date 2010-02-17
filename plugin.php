@@ -43,7 +43,7 @@ class DocsViewerPlugin
     {
         require_once 'Zend/Uri.php';
         $uri = Zend_Uri::factory(self::API_URL);
-        $uri->setQuery(array('url'      => WEB_ARCHIVE . '/' . $file->archive_filename, 
+        $uri->setQuery(array('url'      => WEB_FILES . '/' . $file->archive_filename, 
                              'embedded' => 'true'));
         return $uri->getUri();
     }
