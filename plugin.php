@@ -8,13 +8,15 @@ add_plugin_hook('admin_append_to_items_show_primary', 'DocsViewerPlugin::embed')
 class DocsViewerPlugin
 {
     const API_URL = 'http://docs.google.com/viewer';
+    const VIEWER_WIDTH = 500;
+    const VIEWER_HEIGHT = 600;
     
     private $_supportedFiles = array('pdf', 'doc', 'ppt', 'tif', 'tiff');
     
     public static function install()
     {
-        set_option('docsviewer_width', '500');
-        set_option('docsviewer_height', '600');
+        set_option('docsviewer_width', DocsViewerPlugin::VIEWER_WIDTH);
+        set_option('docsviewer_height', DocsViewerPlugin::VIEWER_HEIGHT);
     }
     
     public static function uninstall()
@@ -30,6 +32,7 @@ class DocsViewerPlugin
 <p><input type="text" name="docsviewer_width" value="<?php echo get_option('docsviewer_width'); ?>" size="5" /></p>
 <label for="docsviewer_height">The height of the Docs Viewer, in pixels:</label>
 <p><input type="text" name="docsviewer_height" value="<?php echo get_option('docsviewer_height'); ?>" size="5" /></p>
+<p>By using this service you acknowledge that you have read and agreed to the <a href="http://docs.google.com/viewer/TOS?hl=en">Google Docs Viewer Terms of Service</a>.</p>
 <?php
     }
     
