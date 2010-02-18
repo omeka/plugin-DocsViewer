@@ -1,4 +1,6 @@
 <?php
+add_plugin_hook('install', 'DocsViewerPlugin::install');
+add_plugin_hook('uninstall', 'DocsViewerPlugin::uninstall');
 add_plugin_hook('config_form', 'DocsViewerPlugin::configForm');
 add_plugin_hook('config', 'DocsViewerPlugin::config');
 add_plugin_hook('admin_append_to_items_show_primary', 'DocsViewerPlugin::embed');
@@ -7,7 +9,19 @@ class DocsViewerPlugin
 {
     const API_URL = 'http://docs.google.com/viewer';
     
-    private $_supportedFiles = array('pdf', 'doc', 'ppt', 'tif', 'tiff'); 
+    private $_supportedFiles = array('pdf', 'doc', 'ppt', 'tif', 'tiff');
+    
+    public static function install()
+    {
+        set_option('docsviewer_width', '500');
+        set_option('docsviewer_height', '600');
+    }
+    
+    public static function uninstall()
+    {
+        delete_option('docsviewer_width');
+        delete_option('docsviewer_height');
+    } 
     
     public static function configForm()
     {
