@@ -7,6 +7,8 @@ class DocsViewerPlugin
 {
     const API_URL = 'http://docs.google.com/viewer';
     
+    private $_supportedFiles = array('pdf', 'doc', 'ppt', 'tif', 'tiff'); 
+    
     public static function configForm()
     {
 ?>
@@ -28,18 +30,30 @@ class DocsViewerPlugin
     
     public static function embed()
     {
+        $docsViewer = new DocsViewerPlugin;
+        $docsViewer->_embed();
+    }
+    
+    private function _embed()
+    {
         foreach (__v()->item->Files as $file) {
+            $extension = pathinfo($file->archive_filename, PATHINFO_EXTENSION);
+            if (!in_array($extension, $this->_supportedFiles)) {
+                continue;
+            }
 ?>
 <div>
-    <iframe src="<?php echo DocsViewerPlugin::_getUrl($file);; ?>" 
-            style="width:<?php echo get_option('docsviewer_width'); ?>px; height:<?php echo get_option('docsviewer_height'); ?>px;"
-            frameborder="0"></iframe>
+    <h2>File: <?php echo $file->original_filename; ?></h2>
+    <iframe src="<?php echo $this->_getUrl($file); ?>" 
+            width="<?php echo get_option('docsviewer_width'); ?>" 
+            height="<?php echo get_option('docsviewer_height'); ?>" 
+            style="border: none;"></iframe>
 </div>
 <?php
         }
     }
     
-    private static function _getUrl(File $file)
+    private function _getUrl(File $file)
     {
         require_once 'Zend/Uri.php';
         $uri = Zend_Uri::factory(self::API_URL);
