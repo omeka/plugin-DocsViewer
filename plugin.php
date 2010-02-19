@@ -3,20 +3,26 @@ add_plugin_hook('install', 'DocsViewerPlugin::install');
 add_plugin_hook('uninstall', 'DocsViewerPlugin::uninstall');
 add_plugin_hook('config_form', 'DocsViewerPlugin::configForm');
 add_plugin_hook('config', 'DocsViewerPlugin::config');
-add_plugin_hook('admin_append_to_items_show_primary', 'DocsViewerPlugin::embed');
+add_plugin_hook('admin_append_to_items_show_primary', 'DocsViewerPlugin::append');
+add_plugin_hook('public_append_to_items_show', 'DocsViewerPlugin::append');
 
 class DocsViewerPlugin
 {
     const API_URL = 'http://docs.google.com/viewer';
-    const VIEWER_WIDTH = 500;
-    const VIEWER_HEIGHT = 600;
+    const DEFAULT_VIEWER_EMBED = 1;
+    const DEFAULT_VIEWER_WIDTH = 500;
+    const DEFAULT_VIEWER_HEIGHT = 600;
     
     private $_supportedFiles = array('pdf', 'doc', 'ppt', 'tif', 'tiff');
     
     public static function install()
     {
-        set_option('docsviewer_width', DocsViewerPlugin::VIEWER_WIDTH);
-        set_option('docsviewer_height', DocsViewerPlugin::VIEWER_HEIGHT);
+        set_option('docsviewer_embed_admin', DocsViewerPlugin::DEFAULT_VIEWER_EMBED);
+        set_option('docsviewer_width_admin', DocsViewerPlugin::DEFAULT_VIEWER_WIDTH);
+        set_option('docsviewer_height_admin', DocsViewerPlugin::DEFAULT_VIEWER_HEIGHT);
+        set_option('docsviewer_embed_public', DocsViewerPlugin::DEFAULT_VIEWER_EMBED);
+        set_option('docsviewer_width_public', DocsViewerPlugin::DEFAULT_VIEWER_WIDTH);
+        set_option('docsviewer_height_public', DocsViewerPlugin::DEFAULT_VIEWER_HEIGHT);
     }
     
     public static function uninstall()
@@ -27,31 +33,37 @@ class DocsViewerPlugin
     
     public static function configForm()
     {
-?>
-<label for="docsviewer_width">The width of the Docs Viewer, in pixels:</label>
-<p><input type="text" name="docsviewer_width" value="<?php echo get_option('docsviewer_width'); ?>" size="5" /></p>
-<label for="docsviewer_height">The height of the Docs Viewer, in pixels:</label>
-<p><input type="text" name="docsviewer_height" value="<?php echo get_option('docsviewer_height'); ?>" size="5" /></p>
-<p>By using this service you acknowledge that you have read and agreed to the <a href="http://docs.google.com/viewer/TOS?hl=en">Google Docs Viewer Terms of Service</a>.</p>
-<?php
+        include 'config_form.php';
     }
     
     public static function config($post)
     {
-        if (!is_numeric($post['docsviewer_width']) || !is_numeric($post['docsviewer_height'])) {
+        if (!is_numeric($post['docsviewer_width_admin']) || 
+            !is_numeric($post['docsviewer_height_admin']) || 
+            !is_numeric($post['docsviewer_width_public']) || 
+            !is_numeric($post['docsviewer_height_public'])) {
             throw new Exception('The width and height must be numeric.');
         }
-        set_option('docsviewer_width', $post['docsviewer_width']);
-        set_option('docsviewer_height', $post['docsviewer_height']);
+        set_option('docsviewer_embed_admin', (int) (boolean) $post['docsviewer_embed_admin']);
+        set_option('docsviewer_width_admin', $post['docsviewer_width_admin']);
+        set_option('docsviewer_height_admin', $post['docsviewer_height_admin']);
+        set_option('docsviewer_embed_public', (int) (boolean) $post['docsviewer_embed_public']);
+        set_option('docsviewer_width_public', $post['docsviewer_width_public']);
+        set_option('docsviewer_height_public', $post['docsviewer_height_public']);
     }
     
-    public static function embed()
+    public static function append()
     {
+        // Embed viewer only if configured to do so.
+        if ((is_admin_theme() && !get_option('docsviewer_embed_admin')) || 
+            (!is_admin_theme() && !get_option('docsviewer_embed_public'))) {
+            return;
+        }
         $docsViewer = new DocsViewerPlugin;
-        $docsViewer->_embed();
+        $docsViewer->embed();
     }
     
-    private function _embed()
+    public function embed()
     {
         foreach (__v()->item->Files as $file) {
             $extension = pathinfo($file->archive_filename, PATHINFO_EXTENSION);
@@ -62,8 +74,8 @@ class DocsViewerPlugin
 <div>
     <h2>File: <?php echo $file->original_filename; ?></h2>
     <iframe src="<?php echo $this->_getUrl($file); ?>" 
-            width="<?php echo get_option('docsviewer_width'); ?>" 
-            height="<?php echo get_option('docsviewer_height'); ?>" 
+            width="<?php echo is_admin_theme() ? get_option('docsviewer_width_admin') : get_option('docsviewer_width_public'); ?>" 
+            height="<?php echo is_admin_theme() ? get_option('docsviewer_height_admin') : get_option('docsviewer_height_public'); ?>" 
             style="border: none;"></iframe>
 </div>
 <?php
