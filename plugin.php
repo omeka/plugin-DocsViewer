@@ -42,7 +42,7 @@ class DocsViewerPlugin
             !is_numeric($post['docsviewer_height_admin']) || 
             !is_numeric($post['docsviewer_width_public']) || 
             !is_numeric($post['docsviewer_height_public'])) {
-            throw new Exception('The width and height must be numeric.');
+            throw new Omeka_Validator_Exception('The width and height must be numeric.');
         }
         set_option('docsviewer_embed_admin', (int) (boolean) $post['docsviewer_embed_admin']);
         set_option('docsviewer_width_admin', $post['docsviewer_width_admin']);
