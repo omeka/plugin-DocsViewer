@@ -65,28 +65,52 @@ class DocsViewerPlugin
     
     public function embed()
     {
+        // Get valid documents.
+        $docs = array();
         foreach (__v()->item->Files as $file) {
             $extension = pathinfo($file->archive_filename, PATHINFO_EXTENSION);
             if (!in_array($extension, $this->_supportedFiles)) {
                 continue;
             }
-?>
-<div>
-    <h2>File: <?php echo $file->original_filename; ?></h2>
-    <iframe src="<?php echo $this->_getUrl($file); ?>" 
-            width="<?php echo is_admin_theme() ? get_option('docsviewer_width_admin') : get_option('docsviewer_width_public'); ?>" 
-            height="<?php echo is_admin_theme() ? get_option('docsviewer_height_admin') : get_option('docsviewer_height_public'); ?>" 
-            style="border: none;"></iframe>
-</div>
-<?php
+            $docs[] = $file;
         }
+?>
+<?php if (!empty($docs)): ?>
+<script type="text/javascript">
+jQuery(document).ready(function () {
+    jQuery('.docsviewer_plugin_docs').click(function(event) {
+        // Prevent the browser from following the link.
+        event.preventDefault();
+        // Get the docviewer and build an iframe.
+        var docviewer = jQuery('#docsviewer_plugin_docviewer');
+        docviewer.empty();
+        docviewer.append(
+        '<h2>Document: ' + jQuery(this).text() + '</h2>' 
+      + '<iframe src="' + this.href 
+      + '" width="' + <?php echo is_admin_theme() ? js_escape(get_option('docsviewer_width_admin')) : js_escape(get_option('docsviewer_width_public')); ?> 
+      + '" height="' + <?php echo is_admin_theme() ? js_escape(get_option('docsviewer_height_admin')) : js_escape(get_option('docsviewer_height_public')); ?> 
+      + '" style="border: none;"></iframe>');
+    });
+});
+</script>
+<div>
+    <h2>View Documents</h2>
+    <ul>
+        <?php foreach($docs as $doc): ?>
+        <li><a href="<?php echo html_escape($this->_getUrl($doc)); ?>" class="docsviewer_plugin_docs"><?php echo html_escape($doc->original_filename); ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+<div id="docsviewer_plugin_docviewer"></div>
+<?php endif; ?>
+<?php
     }
     
     private function _getUrl(File $file)
     {
         require_once 'Zend/Uri.php';
         $uri = Zend_Uri::factory(self::API_URL);
-        $uri->setQuery(array('url'      => WEB_FILES . '/' . $file->archive_filename, 
+        $uri->setQuery(array('url'      => $file->getWebPath(), 
                              'embedded' => 'true'));
         return $uri->getUri();
     }
