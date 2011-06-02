@@ -13,7 +13,22 @@ class DocsViewerPlugin
     const DEFAULT_VIEWER_WIDTH = 500;
     const DEFAULT_VIEWER_HEIGHT = 600;
     
-    private $_supportedFiles = array('pdf', 'doc', 'ppt', 'tif', 'tiff');
+    // http://docs.google.com/support/bin/answer.py?hl=en&answer=1189935
+    private $_supportedFiles = array(
+        'doc', 'docx', // Microsoft Word
+        'ppt', 'pptx', // Microsoft PowerPoint
+        'xls', 'xlsx', // Microsoft Excel
+        'tif', 'tiff', // Tagged Image File Format
+        'eps', 'ps', // PostScript
+        'pdf', // Adobe Portable Document Format
+        'pages', // Apple Pages
+        'ai', // Adobe Illustrator
+        'psd', // Adobe Photoshop
+        'dxf', // Autodesk AutoCad
+        'svg', // Scalable Vector Graphics
+        'ttf', // TrueType
+        'xps', // XML Paper Specification
+    );
     
     public static function install()
     {
@@ -69,7 +84,7 @@ class DocsViewerPlugin
         $docs = array();
         foreach (__v()->item->Files as $file) {
             $extension = pathinfo($file->archive_filename, PATHINFO_EXTENSION);
-            if (!in_array($extension, $this->_supportedFiles)) {
+            if (!in_array(strtolower($extension), $this->_supportedFiles)) {
                 continue;
             }
             $docs[] = $file;
