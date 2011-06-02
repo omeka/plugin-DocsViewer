@@ -110,7 +110,7 @@ jQuery(document).ready(function () {
     {
         require_once 'Zend/Uri.php';
         $uri = Zend_Uri::factory(self::API_URL);
-        $uri->setQuery(array('url'      => $file->getWebPath(), 
+        $uri->setQuery(array('url'      => $file->getWebPath('archive'), 
                              'embedded' => 'true'));
         return $uri->getUri();
     }
