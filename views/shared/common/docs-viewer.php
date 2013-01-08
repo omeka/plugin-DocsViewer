@@ -1,6 +1,6 @@
 <script type="text/javascript">
 jQuery(document).ready(function () {
-    var docviewer = jQuery('#docsviewer');
+    var docviewer = jQuery('#docsviewer_viewer');
     
     // Set the default docviewer.
     docviewer.append(
@@ -25,7 +25,7 @@ jQuery(document).ready(function () {
     });
 });
 </script>
-<div>
+<div id="docsviewer">
     <h2>Document Viewer</h2>
     <?php if (1 < count($docs)): ?>
     <p>Click below to view a document.</p>
@@ -35,5 +35,5 @@ jQuery(document).ready(function () {
         <?php endforeach; ?>
     </ul>
     <?php endif; ?>
-    <div id="docsviewer"></div>
+    <div id="docsviewer_viewer"></div>
 </div>
