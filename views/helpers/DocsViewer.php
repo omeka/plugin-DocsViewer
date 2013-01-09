@@ -32,9 +32,11 @@ class DocsViewer_View_Helper_DocsViewer extends Zend_View_Helper_Abstract
      * Return a Google document viewer for the provided files.
      * 
      * @param File|array $files A File record or an array of File records.
+     * @param int $width The width of the document viewer in pixels.
+     * @param int $height The height of the document viewer in pixels.
      * @return string|null
      */
-    public function docsViewer($files)
+    public function docsViewer($files, $width = 500, $height = 600)
     {
         if (!is_array($files)) {
             $files = array($files);
@@ -60,6 +62,8 @@ class DocsViewer_View_Helper_DocsViewer extends Zend_View_Helper_Abstract
             return;
         }
         
-        return $this->view->partial('common/docs-viewer.php', array('docs' => $docs));
+        return $this->view->partial('common/docs-viewer.php', array(
+            'docs' => $docs, 'width' => $width, 'height' => $height, 
+        ));
     }
 }

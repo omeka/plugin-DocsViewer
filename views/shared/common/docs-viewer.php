@@ -6,8 +6,8 @@ jQuery(document).ready(function () {
     docviewer.append(
     '<h2>Viewing: ' + <?php echo js_escape($docs[0]->original_filename); ?> + '</h2>' 
   + '<iframe src="' + <?php echo js_escape(DocsViewerPlugin::API_URL . '?' . http_build_query(array('url' => $docs[0]->getWebPath('original'), 'embedded' => 'true'))); ?> 
-  + '" width="' + <?php echo is_admin_theme() ? js_escape(get_option('docsviewer_width_admin')) : js_escape(get_option('docsviewer_width_public')); ?> 
-  + '" height="' + <?php echo is_admin_theme() ? js_escape(get_option('docsviewer_height_admin')) : js_escape(get_option('docsviewer_height_public')); ?> 
+  + '" width="' + <?php echo $width; ?> 
+  + '" height="' + <?php echo $height; ?> 
   + '" style="border: none;"></iframe>');
     
     // Handle the document click event.
@@ -19,8 +19,8 @@ jQuery(document).ready(function () {
         docviewer.append(
         '<h2>Viewing: ' + jQuery(this).text() + '</h2>' 
       + '<iframe src="' + this.href 
-      + '" width="' + <?php echo is_admin_theme() ? js_escape(get_option('docsviewer_width_admin')) : js_escape(get_option('docsviewer_width_public')); ?> 
-      + '" height="' + <?php echo is_admin_theme() ? js_escape(get_option('docsviewer_height_admin')) : js_escape(get_option('docsviewer_height_public')); ?> 
+      + '" width="' + <?php echo $width; ?> 
+      + '" height="' + <?php echo $height; ?> 
       + '" style="border: none;"></iframe>');
     });
 });

@@ -101,7 +101,9 @@ class DocsViewerPlugin extends Omeka_Plugin_AbstractPlugin
         if (!get_option('docsviewer_embed_admin')) {
             return;
         }
-        echo $args['view']->docsViewer($args['item']->Files);
+        echo $args['view']->docsViewer($args['item']->Files, 
+                                       get_option('docsviewer_width_admin'), 
+                                       get_option('docsviewer_height_admin'));
     }
     
     /**
@@ -113,6 +115,8 @@ class DocsViewerPlugin extends Omeka_Plugin_AbstractPlugin
         if (!get_option('docsviewer_embed_public')) {
             return;
         }
-        echo $args['view']->docsViewer($args['item']->Files);
+        echo $args['view']->docsViewer($args['item']->Files, 
+                                       get_option('docsviewer_width_public'), 
+                                       get_option('docsviewer_height_public'));
     }
 }
