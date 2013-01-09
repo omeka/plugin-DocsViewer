@@ -31,7 +31,7 @@ jQuery(document).ready(function () {
     <p>Click below to view a document.</p>
     <ul>
         <?php foreach($docs as $doc): ?>
-        <li><a href="<?php echo html_escape(DocsViewerPlugin::API_URL . '?' . http_build_query(array('url' => $docs[0]->getWebPath('original'), 'embedded' => 'true'))); ?>" class="docsviewer_docs"><?php echo html_escape($doc->original_filename); ?></a></li>
+        <li><a href="<?php echo html_escape(DocsViewerPlugin::API_URL . '?' . http_build_query(array('url' => $doc->getWebPath('original'), 'embedded' => 'true'))); ?>" class="docsviewer_docs"><?php echo html_escape($doc->original_filename); ?></a></li>
         <?php endforeach; ?>
     </ul>
     <?php endif; ?>
