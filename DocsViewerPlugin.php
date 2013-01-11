@@ -24,7 +24,6 @@ class DocsViewerPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_hooks = array(
         'install',
         'uninstall',
-        'initialize',
         'config_form',
         'config',
         'admin_items_show',
@@ -54,15 +53,6 @@ class DocsViewerPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookUninstall()
     {
         $this->_uninstallOptions();
-    }
-    
-    /**
-     * Initialize the plugin.
-     */
-    public function hookInitialize()
-    {
-        // Add the view helper directory to the stack.
-        get_view()->addHelperPath(dirname(__FILE__) . '/views/helpers', 'DocsViewer_View_Helper_');
     }
     
     /**
