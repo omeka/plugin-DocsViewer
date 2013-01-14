@@ -2,7 +2,7 @@
 
 <div class="field">
     <div id="docsviewer_embed_admin_label" class="two columns alpha">
-        <label for="docsviewer_embed_admin">Embed viewer in admin item show pages?</label>
+        <label for="docsviewer_embed_admin"><?php echo __('Embed viewer in admin item show pages?'); ?></label>
     </div>
     <div class="inputs five columns omega">
         <?php echo $this->formCheckbox('docsviewer_embed_admin', null, 
@@ -11,7 +11,7 @@
 </div>
 <div class="field">
     <div id="docsviewer_width_admin_label" class="two columns alpha">
-        <label for="docsviewer_width_admin">Viewer width, in pixels</label>
+        <label for="docsviewer_width_admin"><?php echo __('Viewer width, in pixels'); ?></label>
     </div>
     <div class="inputs five columns omega">
         <?php echo $this->formText('docsviewer_width_admin', get_option('docsviewer_width_admin')); ?>
@@ -19,7 +19,7 @@
 </div>
 <div class="field">
     <div id="docsviewer_height_admin_label" class="two columns alpha">
-        <label for="docsviewer_height_admin">Viewer height, in pixels</label>
+        <label for="docsviewer_height_admin"><?php echo __('Viewer height, in pixels'); ?></label>
     </div>
     <div class="inputs five columns omega">
         <?php echo $this->formText('docsviewer_height_admin', get_option('docsviewer_height_admin')); ?>
@@ -30,7 +30,7 @@
 
 <div class="field">
     <div id="docsviewer_embed_public_label" class="two columns alpha">
-        <label for="docsviewer_embed_public">Embed viewer in public item show pages?</label>
+        <label for="docsviewer_embed_public"><?php echo __('Embed viewer in public item show pages?'); ?></label>
     </div>
     <div class="inputs five columns omega">
         <?php echo $this->formCheckbox('docsviewer_embed_public', null, 
@@ -39,7 +39,7 @@
 </div>
 <div class="field">
     <div id="docsviewer_width_public_label" class="two columns alpha">
-        <label for="docsviewer_width_public">Viewer width, in pixels</label>
+        <label for="docsviewer_width_public"><?php echo __('Viewer width, in pixels'); ?></label>
     </div>
     <div class="inputs five columns omega">
         <?php echo $this->formText('docsviewer_width_public', get_option('docsviewer_width_public')); ?>
@@ -47,12 +47,10 @@
 </div>
 <div class="field">
     <div id="docsviewer_height_public_label" class="two columns alpha">
-        <label for="docsviewer_height_public">Viewer height, in pixels</label>
+        <label for="docsviewer_height_public"><?php echo __('Viewer height, in pixels'); ?></label>
     </div>
     <div class="inputs five columns omega">
         <?php echo $this->formText('docsviewer_height_public', get_option('docsviewer_height_public')); ?>
     </div>
 </div>
-<p>By using this service you acknowledge that you have read and agreed to the 
-<a href="http://www.google.com/intl/en/policies/terms/">Google Docs Viewer Terms 
-of Service</a>.</p>
+<p><?php echo __('By using this service you acknowledge that you have read and agreed to the %sGoogle Docs Viewer Terms of Service%s.', '<a href="http://www.google.com/intl/en/policies/terms/">', '</a>'); ?></p>
