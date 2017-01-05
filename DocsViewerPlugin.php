@@ -21,9 +21,27 @@ class DocsViewerPlugin extends Omeka_Plugin_AbstractPlugin
     
     const DEFAULT_VIEWER_HEIGHT = 600;
     
+    // http://docs.google.com/support/bin/answer.py?hl=en&answer=1189935
+    protected $_supportedFileFormats = array(
+        'doc|docx' => 'Microsoft Word',
+        'ppt|pptx' => 'Microsoft PowerPoint',
+        'xls|xlsx' => 'Microsoft Excel',
+        'tif|tiff' => 'Tagged Image File Format',
+        'eps|ps' => 'PostScript',
+        'pdf' => 'Adobe Portable Document Format',
+        'pages' => 'Apple Pages',
+        'ai' => 'Adobe Illustrator',
+        'psd' => 'Adobe Photoshop',
+        'dxf' => 'Autodesk AutoCad',
+        'svg' => 'Scalable Vector Graphics',
+        'ttf' => 'TrueType',
+        'xps' => 'XML Paper Specification',
+    );
+
     protected $_hooks = array(
         'install',
         'uninstall',
+        'upgrade',
         'initialize',
         'config_form',
         'config',
@@ -38,6 +56,7 @@ class DocsViewerPlugin extends Omeka_Plugin_AbstractPlugin
         'docsviewer_embed_public' => self::DEFAULT_VIEWER_EMBED,
         'docsviewer_width_public' => self::DEFAULT_VIEWER_WIDTH,
         'docsviewer_height_public' => self::DEFAULT_VIEWER_HEIGHT,
+        'docsviewer_file_formats' => array(),
     );
     
     /**
@@ -45,6 +64,7 @@ class DocsViewerPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function hookInstall()
     {
+        $this->_options['docsviewer_file_formats'] = json_encode(array_keys($this->_supportedFileFormats));
         $this->_installOptions();
     }
     
@@ -54,6 +74,16 @@ class DocsViewerPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookUninstall()
     {
         $this->_uninstallOptions();
+    }
+
+    public function hookUpgrade($args)
+    {
+        $oldVersion = $args['old_version'];
+        $newVersion = $args['new_version'];
+
+        if (version_compare($oldVersion, '2.0', '<=')) {
+            set_option('docsviewer_file_formats', json_encode(array_keys($this->_supportedFileFormats)));
+        }
     }
     
     /**
@@ -70,7 +100,13 @@ class DocsViewerPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function hookConfigForm()
     {
-        echo get_view()->partial('plugins/docs-viewer-config-form.php');
+        echo get_view()->partial(
+            'plugins/docs-viewer-config-form.php',
+            array(
+                'supportedFileFormats' => $this->_supportedFileFormats,
+                'fileFormats' => json_decode(get_option('docsviewer_file_formats'), true)
+            )
+        );
     }
     
     /**
@@ -84,12 +120,21 @@ class DocsViewerPlugin extends Omeka_Plugin_AbstractPlugin
             !is_numeric($_POST['docsviewer_height_public'])) {
             throw new Omeka_Validate_Exception('The width and height must be numeric.');
         }
+
+        $fileFormats = array();
+        foreach (array_keys($_POST['docsviewer_file_formats']) as $fmt) {
+            if (isset($this->_supportedFileFormats[$fmt])) {
+                $fileFormats[] = $fmt;
+            }
+        }
+
         set_option('docsviewer_embed_admin', (int) (boolean) $_POST['docsviewer_embed_admin']);
         set_option('docsviewer_width_admin', $_POST['docsviewer_width_admin']);
         set_option('docsviewer_height_admin', $_POST['docsviewer_height_admin']);
         set_option('docsviewer_embed_public', (int) (boolean) $_POST['docsviewer_embed_public']);
         set_option('docsviewer_width_public', $_POST['docsviewer_width_public']);
         set_option('docsviewer_height_public', $_POST['docsviewer_height_public']);
+        set_option('docsviewer_file_formats', json_encode($fileFormats));
     }
     
     /**

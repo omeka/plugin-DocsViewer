@@ -53,4 +53,15 @@
         <?php echo $this->formText('docsviewer_height_public', get_option('docsviewer_height_public')); ?>
     </div>
 </div>
+
+<h2>File Formats to Display via the Docs Viewer</h2>
+<?php foreach ($supportedFileFormats as $extensions => $fileFormat): ?>
+<div>
+    <label>
+        <input type="checkbox" name="docsviewer_file_formats[<?php echo $extensions; ?>]"<?php echo in_array($extensions, $fileFormats) ? ' checked' : ''; ?>>
+        <?php printf('%s (%s)', $fileFormat, str_replace('|', ', ', $extensions)); ?>
+    </label>
+</div>
+<?php endforeach; ?>
+
 <p><?php echo __('By using this service you acknowledge that you have read and agreed to the %sGoogle Docs Viewer Terms of Service%s.', '<a href="http://www.google.com/intl/en/policies/terms/">', '</a>'); ?></p>

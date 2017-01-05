@@ -11,23 +11,6 @@
  */
 class DocsViewer_View_Helper_DocsViewer extends Zend_View_Helper_Abstract
 {
-    // http://docs.google.com/support/bin/answer.py?hl=en&answer=1189935
-    protected $_supportedFiles = array(
-        'doc', 'docx', // Microsoft Word
-        'ppt', 'pptx', // Microsoft PowerPoint
-        'xls', 'xlsx', // Microsoft Excel
-        'tif', 'tiff', // Tagged Image File Format
-        'eps', 'ps', // PostScript
-        'pdf', // Adobe Portable Document Format
-        'pages', // Apple Pages
-        'ai', // Adobe Illustrator
-        'psd', // Adobe Photoshop
-        'dxf', // Autodesk AutoCad
-        'svg', // Scalable Vector Graphics
-        'ttf', // TrueType
-        'xps', // XML Paper Specification
-    );
-    
     /**
      * Return a Google document viewer for the provided files.
      * 
@@ -41,6 +24,8 @@ class DocsViewer_View_Helper_DocsViewer extends Zend_View_Helper_Abstract
         if (!is_array($files)) {
             $files = array($files);
         }
+
+        $fileFormats = json_decode(get_option('docsviewer_file_formats'), true);
         
         // Filter out invalid documents.
         $docs = array();
@@ -51,7 +36,7 @@ class DocsViewer_View_Helper_DocsViewer extends Zend_View_Helper_Abstract
             }
             // A valid document must have a supported extension.
             $extension = pathinfo($file->filename, PATHINFO_EXTENSION);
-            if (!in_array(strtolower($extension), $this->_supportedFiles)) {
+            if (!in_array(strtolower($extension), $fileFormats)) {
                 continue;
             }
             $docs[] = $file;
