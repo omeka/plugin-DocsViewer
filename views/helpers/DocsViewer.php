@@ -25,7 +25,15 @@ class DocsViewer_View_Helper_DocsViewer extends Zend_View_Helper_Abstract
             $files = array($files);
         }
 
-        $fileFormats = json_decode(get_option('docsviewer_file_formats'), true);
+        $fmts = json_decode(get_option('docsviewer_file_formats'), true);
+
+        $fileFormats = array();
+        foreach ($fmts as $fmt) {
+            // Formats could be delimited by a pipe.
+            foreach (explode('|', $fmt) as $f) {
+                $fileFormats[] = $f;
+            }
+        }
         
         // Filter out invalid documents.
         $docs = array();
